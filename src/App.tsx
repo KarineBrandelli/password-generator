@@ -1,9 +1,10 @@
-import './index.css'
+import "./index.css";
+import { Card } from "./components/Card";
 
 export default function App() {
   return (
     <>
-      <h1 className="text-sky-600 text-3xl font-bold">Hello TypeScript!</h1>
+      <Card />
     </>
   );
 }
