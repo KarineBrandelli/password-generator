@@ -1,7 +1,7 @@
 export const Card = () => {
   return (
-    <div className="bg-cyan-500 max-w-sm rounded-lg p-8 text-center mx-4">
-      <h1 className="mb-5 text-2xl font-bold"> PASSWORD GENERATOR </h1>
+    <div className="bg-cyan-500 max-w-sm rounded-lg p-6 sm:p-8 text-center mx-4">
+      <h1 className="mb-5 text-xl sm:text-2xl font-bold"> PASSWORD GENERATOR </h1>
 
       <div className="flex mb-5 h-10 items-center">
         <input
@@ -23,21 +23,21 @@ export const Card = () => {
         </button>
       </div>
 
-      <div className="text-lg font-semibold" >
+      <div className="text-base font-semibold sm:text-lg" >
         <div className="flex items-center justify-between mb-3" >
           <label
             htmlFor="password-length"> LENGTH </label>
           <input
             type="range"
             id="password-length"
-            className="mr-4 h-2 w-2/6 appearance-none rounded"
+            className="h-2 w-1/4 appearance-none rounded"
             min={4}
             max={25}
           />
 
           <input
             type="number"
-            className="w-1/6 rounded border"
+            className="w-8 sm:w-10 rounded border"
             aria-labelledby="password-length"
             min={4}
             max={25}
@@ -50,7 +50,7 @@ export const Card = () => {
           <input
             type="checkbox"
             id="include-uppercase"
-            className="h-4 w-4 mr-5"
+            className="h-4 w-4"
           />
         </div>
 
@@ -60,7 +60,7 @@ export const Card = () => {
           <input
             type="checkbox"
             id="include-number"
-            className="h-4 w-4 mr-5"
+            className="h-4 w-4"
           />
         </div>
 
@@ -70,13 +70,13 @@ export const Card = () => {
           <input
             type="checkbox"
             id="include-symbol"
-            className="h-4 w-4 mr-5"
+            className="h-4 w-4"
           />
         </div>
       </div>
 
       <button
-        className="mt-6 w-full py-3 rounded font-bold
+        className="mt-6 w-full py-3 rounded text-base sm:text-lg font-bold
         bg-gradient-to-r from-sky-200 to-sky-600
         transition-all hover:scale-105 active:scale-100">
           GENERATE
