@@ -2,6 +2,42 @@ import { useState } from 'react'
 
 export const Card = () => {
   const [passLength, setPassLength] = useState<number | string>(6);
+  const [includeUppercase, setIncludeUppercase] = useState(true);
+  const [includeNumber, setIncludeNumber] = useState(true);
+  const [includeSymbol, setIncludeSymbol] = useState(true);
+
+  const [password, setPassword] = useState(() => generatePassword());
+
+  function generatePassword(
+    characterAmount = passLength,
+    includeUpper = includeUppercase,
+    includeNumbers = includeNumber,
+    includeSymbols = includeSymbol
+    ) {
+      const UPPERCASE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const LOWERCASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
+      const NUMBER_CHAR = "1234567890";
+      const SYMBOL_CHAR = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
+      let combinedCharacters = LOWERCASE_CHAR;
+
+      if (includeUpper) combinedCharacters += UPPERCASE_CHAR;
+      if (includeNumbers) combinedCharacters += NUMBER_CHAR;
+      if (includeSymbols) combinedCharacters += SYMBOL_CHAR;
+
+      let password = "";
+      for (let i = 0; i < characterAmount; i++) {
+        password += combinedCharacters.charAt(
+          Math.floor(Math.random() * combinedCharacters.length)
+        );
+      }
+
+      return password;
+    }
+
+  function handleCopy(password: string) {
+    copy(password);
+  }
 
   return (
     <div className="bg-cyan-500 max-w-sm rounded-lg p-6 sm:p-8 text-center mx-4">
@@ -12,6 +48,7 @@ export const Card = () => {
           type="text"
           className="h-full w-full rounded-l-lg border p-3"
           id="password"
+          value={password}
           disabled />
         <button
           className="group flex h-full items-center rounded-r-lg bg-neutral-100" >
@@ -58,7 +95,9 @@ export const Card = () => {
             type="checkbox"
             id="include-uppercase"
             className="h-4 w-4"
-          />
+            defaultChecked={includeUppercase}
+            onChange={() =>
+              setIncludeUppercase((prevIncludeUppercase) => !prevIncludeUppercase)} />
         </div>
 
         <div className="flex items-center justify-between mb-3">
@@ -68,7 +107,9 @@ export const Card = () => {
             type="checkbox"
             id="include-number"
             className="h-4 w-4"
-          />
+            defaultChecked={includeNumber}
+            onChange={() =>
+              setIncludeNumber((prevIncludeNumber) => !prevIncludeNumber)} />
         </div>
 
         <div className="flex items-center justify-between">
@@ -77,16 +118,21 @@ export const Card = () => {
           <input
             type="checkbox"
             id="include-symbol"
-            className="h-4 w-4" 
-          />
+            className="h-4 w-4"
+            defaultChecked={includeSymbol}
+            onChange={() =>
+              setIncludeSymbol((prevIncludeSymbol) => !prevIncludeSymbol)} />
         </div>
       </div>
 
       <button
         className="mt-6 w-full py-3 rounded text-base sm:text-lg font-bold
         bg-gradient-to-r from-sky-200 to-sky-600
-        transition-all hover:scale-105 active:scale-100">
-          GENERATE
+        transition-all hover:scale-105 active:scale-100"
+        onClick={() =>
+          setPassword(
+            generatePassword(passLength, includeUppercase, includeNumber,includeSymbol))} >
+        GENERATE
       </button>
     </div>
   );
