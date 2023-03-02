@@ -1,4 +1,8 @@
+import { useState } from 'react'
+
 export const Card = () => {
+  const [passLength, setPassLength] = useState<number | string>(6);
+
   return (
     <div className="bg-cyan-500 max-w-sm rounded-lg p-6 sm:p-8 text-center mx-4">
       <h1 className="mb-5 text-xl sm:text-2xl font-bold"> PASSWORD GENERATOR </h1>
@@ -33,15 +37,18 @@ export const Card = () => {
             className="h-2 w-1/4 appearance-none rounded"
             min={4}
             max={25}
-          />
+            value={passLength}
+            onChange={(e) => setPassLength(parseInt(e.target.value))}  />
 
           <input
             type="number"
-            className="w-8 sm:w-10 rounded border"
+            className="w-14 pl-2 rounded border text-cyan-800"
             aria-labelledby="password-length"
             min={4}
             max={25}
-          />
+            value={passLength}
+            onChange={(e) =>
+              setPassLength(e.target.value === "" ? "" : parseInt(e.target.value))} />
         </div>
 
         <div className="flex items-center justify-between mb-3">
@@ -70,7 +77,7 @@ export const Card = () => {
           <input
             type="checkbox"
             id="include-symbol"
-            className="h-4 w-4"
+            className="h-4 w-4" 
           />
         </div>
       </div>
