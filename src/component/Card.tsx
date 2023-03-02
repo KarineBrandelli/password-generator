@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import copy from 'copy-to-clipboard'
 
 export const Card = () => {
   const [passLength, setPassLength] = useState<number | string>(6);
@@ -46,12 +47,15 @@ export const Card = () => {
       <div className="flex mb-5 h-10 items-center">
         <input
           type="text"
-          className="h-full w-full rounded-l-lg border p-3"
+          className="h-full w-full rounded-l-lg border p-3 font-semibold tracking-wider"
           id="password"
           value={password}
           disabled />
         <button
-          className="group flex h-full items-center rounded-r-lg bg-neutral-100" >
+          className="group flex h-full items-center rounded-r-lg bg-neutral-100"
+          onClick={() => handleCopy(password)}
+          data-tooltip-id="copy-button" 
+          data-tooltip-content="Copy" >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="45"
