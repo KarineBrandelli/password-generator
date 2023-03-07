@@ -4,19 +4,22 @@ import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
 
 export const Card = () => {
-  const [passLength, setPassLength] = useState<number | string>(6);
-  const [includeUppercase, setIncludeUppercase] = useState(true);
-  const [includeNumber, setIncludeNumber] = useState(true);
-  const [includeSymbol, setIncludeSymbol] = useState(true);
+
+  const [passwordSpecs, setPasswordSpecs] = useState<{
+    length: number,
+    includeUppercase: boolean,
+    includeNumber: boolean,
+    includeSymbol: boolean
+  }>({
+    length: 6,
+    includeUppercase: true,
+    includeNumber: true,
+    includeSymbol: true
+  })
 
   const [password, setPassword] = useState(() => generatePassword());
 
-  function generatePassword(
-    characterAmount = passLength,
-    includeUpper = includeUppercase,
-    includeNumbers = includeNumber,
-    includeSymbols = includeSymbol
-    ) {
+  function generatePassword() {
       const UPPERCASE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       const LOWERCASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
       const NUMBER_CHAR = "1234567890";
@@ -24,12 +27,12 @@ export const Card = () => {
 
       let combinedCharacters = LOWERCASE_CHAR;
 
-      if (includeUpper) combinedCharacters += UPPERCASE_CHAR;
-      if (includeNumbers) combinedCharacters += NUMBER_CHAR;
-      if (includeSymbols) combinedCharacters += SYMBOL_CHAR;
+      if (passwordSpecs.includeUppercase) combinedCharacters += UPPERCASE_CHAR;
+      if (passwordSpecs.includeNumber) combinedCharacters += NUMBER_CHAR;
+      if (passwordSpecs.includeSymbol) combinedCharacters += SYMBOL_CHAR;
 
       let password = "";
-      for (let i = 0; i < characterAmount; i++) {
+      for (let i = 0; i < passwordSpecs.length; i++) {
         password += combinedCharacters.charAt(
           Math.floor(Math.random() * combinedCharacters.length)
         );
@@ -85,8 +88,10 @@ export const Card = () => {
             className="h-2 w-1/4 appearance-none rounded"
             min={4}
             max={25}
-            value={passLength}
-            onChange={(e) => setPassLength(parseInt(e.target.value))}  />
+            value={passwordSpecs.length}
+            onChange={(e) => {
+              setPasswordSpecs(prevState => ({...prevState, length: Number(e.target.value)}))
+            }}  />
 
           <input
             type="number"
@@ -94,9 +99,11 @@ export const Card = () => {
             aria-labelledby="password-length"
             min={4}
             max={25}
-            value={passLength}
-            onChange={(e) =>
-              setPassLength(e.target.value === "" ? "" : parseInt(e.target.value))} />
+            value={passwordSpecs.length}
+            onChange={(e) => {
+              setPasswordSpecs(prevState => ({...prevState, length: Number(e.target.value)}))
+            }}
+            />
         </div>
 
         <div className="flex items-center justify-between mb-3">
@@ -106,9 +113,11 @@ export const Card = () => {
             type="checkbox"
             id="include-uppercase"
             className="h-4 w-4"
-            defaultChecked={includeUppercase}
-            onChange={() =>
-              setIncludeUppercase((prevIncludeUppercase) => !prevIncludeUppercase)} />
+            defaultChecked={passwordSpecs.includeUppercase}
+            onChange={() => {
+              setPasswordSpecs(prevState => ({...prevState, includeUppercase: !prevState.includeUppercase}))
+            }}
+            />
         </div>
 
         <div className="flex items-center justify-between mb-3">
@@ -118,9 +127,11 @@ export const Card = () => {
             type="checkbox"
             id="include-number"
             className="h-4 w-4"
-            defaultChecked={includeNumber}
-            onChange={() =>
-              setIncludeNumber((prevIncludeNumber) => !prevIncludeNumber)} />
+            defaultChecked={passwordSpecs.includeNumber}
+            onChange={() => {
+              setPasswordSpecs(prevState => ({...prevState, includeNumber: !prevState.includeNumber}))
+            }}
+            />
         </div>
 
         <div className="flex items-center justify-between">
@@ -130,9 +141,11 @@ export const Card = () => {
             type="checkbox"
             id="include-symbol"
             className="h-4 w-4"
-            defaultChecked={includeSymbol}
-            onChange={() =>
-              setIncludeSymbol((prevIncludeSymbol) => !prevIncludeSymbol)} />
+            defaultChecked={passwordSpecs.includeSymbol}
+            onChange={() => {
+              setPasswordSpecs(prevState => ({...prevState, includeSymbol: !prevState.includeSymbol}))
+            }}
+            />
         </div>
       </div>
 
@@ -140,9 +153,8 @@ export const Card = () => {
         className="mt-6 w-full py-3 rounded text-base sm:text-lg font-bold
         bg-gradient-to-r from-sky-200 to-sky-600
         transition-all hover:scale-105 active:scale-100"
-        onClick={() =>
-          setPassword(
-            generatePassword(passLength, includeUppercase, includeNumber,includeSymbol))} >
+        onClick={() => generatePassword()}
+        >
         GENERATE
       </button>
     </div>
