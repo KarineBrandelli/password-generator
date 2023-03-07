@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import copy from 'copy-to-clipboard'
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -17,29 +17,33 @@ export const Card = () => {
     includeSymbol: true
   })
 
-  const [password, setPassword] = useState(() => generatePassword());
+  const [password, setPassword] = useState<string>('..');
 
-  function generatePassword() {
-      const UPPERCASE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      const LOWERCASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
-      const NUMBER_CHAR = "1234567890";
-      const SYMBOL_CHAR = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+  function generatePassword(): void {
+    const UPPERCASE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const LOWERCASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
+    const NUMBER_CHAR = "1234567890";
+    const SYMBOL_CHAR = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
-      let combinedCharacters = LOWERCASE_CHAR;
+    let combinedCharacters = LOWERCASE_CHAR;
 
-      if (passwordSpecs.includeUppercase) combinedCharacters += UPPERCASE_CHAR;
-      if (passwordSpecs.includeNumber) combinedCharacters += NUMBER_CHAR;
-      if (passwordSpecs.includeSymbol) combinedCharacters += SYMBOL_CHAR;
+    if (passwordSpecs.includeUppercase) combinedCharacters += UPPERCASE_CHAR;
+    if (passwordSpecs.includeNumber) combinedCharacters += NUMBER_CHAR;
+    if (passwordSpecs.includeSymbol) combinedCharacters += SYMBOL_CHAR;
 
-      let password = "";
-      for (let i = 0; i < passwordSpecs.length; i++) {
-        password += combinedCharacters.charAt(
-          Math.floor(Math.random() * combinedCharacters.length)
-        );
-      }
-
-      return password;
+    let result = "";
+    for (let i = 0; i < passwordSpecs.length; i++) {
+      result += combinedCharacters.charAt(
+        Math.floor(Math.random() * combinedCharacters.length)
+      );
     }
+
+    setPassword(result);
+  }
+
+  useEffect(() => {
+    generatePassword()
+  }, [])
 
   function handleCopy(password: string) {
     copy(password);
@@ -59,7 +63,7 @@ export const Card = () => {
         <button
           className="group flex h-full items-center rounded-r-lg bg-neutral-100"
           onClick={() => handleCopy(password)}
-          data-tooltip-id="copy-button" 
+          data-tooltip-id="copy-button"
           data-tooltip-content="Copy" >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -90,8 +94,8 @@ export const Card = () => {
             max={25}
             value={passwordSpecs.length}
             onChange={(e) => {
-              setPasswordSpecs(prevState => ({...prevState, length: Number(e.target.value)}))
-            }}  />
+              setPasswordSpecs(prevState => ({ ...prevState, length: Number(e.target.value) }))
+            }} />
 
           <input
             type="number"
@@ -101,9 +105,9 @@ export const Card = () => {
             max={25}
             value={passwordSpecs.length}
             onChange={(e) => {
-              setPasswordSpecs(prevState => ({...prevState, length: Number(e.target.value)}))
+              setPasswordSpecs(prevState => ({ ...prevState, length: Number(e.target.value) }))
             }}
-            />
+          />
         </div>
 
         <div className="flex items-center justify-between mb-3">
@@ -115,9 +119,9 @@ export const Card = () => {
             className="h-4 w-4"
             defaultChecked={passwordSpecs.includeUppercase}
             onChange={() => {
-              setPasswordSpecs(prevState => ({...prevState, includeUppercase: !prevState.includeUppercase}))
+              setPasswordSpecs(prevState => ({ ...prevState, includeUppercase: !prevState.includeUppercase }))
             }}
-            />
+          />
         </div>
 
         <div className="flex items-center justify-between mb-3">
@@ -129,9 +133,9 @@ export const Card = () => {
             className="h-4 w-4"
             defaultChecked={passwordSpecs.includeNumber}
             onChange={() => {
-              setPasswordSpecs(prevState => ({...prevState, includeNumber: !prevState.includeNumber}))
+              setPasswordSpecs(prevState => ({ ...prevState, includeNumber: !prevState.includeNumber }))
             }}
-            />
+          />
         </div>
 
         <div className="flex items-center justify-between">
@@ -143,9 +147,9 @@ export const Card = () => {
             className="h-4 w-4"
             defaultChecked={passwordSpecs.includeSymbol}
             onChange={() => {
-              setPasswordSpecs(prevState => ({...prevState, includeSymbol: !prevState.includeSymbol}))
+              setPasswordSpecs(prevState => ({ ...prevState, includeSymbol: !prevState.includeSymbol }))
             }}
-            />
+          />
         </div>
       </div>
 
@@ -154,7 +158,7 @@ export const Card = () => {
         bg-gradient-to-r from-sky-200 to-sky-600
         transition-all hover:scale-105 active:scale-100"
         onClick={() => generatePassword()}
-        >
+      >
         GENERATE
       </button>
     </div>
