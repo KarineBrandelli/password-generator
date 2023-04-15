@@ -55,9 +55,9 @@ export const Card = () => {
           value={password}
           disabled />
         <button
-          className="group flex h-full items-center rounded-r-lg bg-neutral-100"
+          className="group flex h-full items-center rounded-r-lg bg-zinc-100"
           onClick={() => handleCopy(password)}
-          data-tooltip-id="copy-button" 
+          data-tooltip-id="copy-button"
           data-tooltip-content="Copy" >
           <svg
             xmlns="http://www.w3.org/2000/svg"
