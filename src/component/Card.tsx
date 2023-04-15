@@ -45,7 +45,7 @@ export const Card = () => {
   return (
     <div className="bg-cyan-600 max-w-sm rounded-xl p-5 sm:p-8 text-center m-4">
 
-      <h1 className="mb-5 text-xl sm:text-2xl font-bold"> PASSWORD GENERATOR </h1>
+      <h1 className="mb-5 text-lg sm:text-2xl font-bold"> PASSWORD GENERATOR </h1>
 
       <div className="flex mb-5 h-10 items-center">
         <input
