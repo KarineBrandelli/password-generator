@@ -50,7 +50,7 @@ export const Card = () => {
       <div className="flex mb-5 h-10 items-center">
         <input
           type="text"
-          className="h-full w-full rounded-l-lg border p-3 font-semibold tracking-wider"
+          className="h-full w-full rounded-l-lg border p-3 font-semibold tracking-wider text-sm sm:text-base"
           id="password"
           value={password}
           disabled />
