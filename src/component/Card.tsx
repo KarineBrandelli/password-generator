@@ -1,42 +1,49 @@
-import { useState } from 'react'
-import copy from 'copy-to-clipboard'
-import { Tooltip } from 'react-tooltip'
-import 'react-tooltip/dist/react-tooltip.css'
+import { useEffect, useState } from "react";
+
+import copy from "copy-to-clipboard";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 export const Card = () => {
-  const [passLength, setPassLength] = useState<number | string>(6);
-  const [includeUppercase, setIncludeUppercase] = useState(true);
-  const [includeNumber, setIncludeNumber] = useState(true);
-  const [includeSymbol, setIncludeSymbol] = useState(true);
+  const [password, setPassword] = useState<string>("");
+  const [passwordContent, setPasswordContent] = useState<{
+    length: number;
+    includeUppercase: boolean;
+    includeNumber: boolean;
+    includeSymbol: boolean;
+  }>({
+    length: 6,
+    includeUppercase: true,
+    includeNumber: true,
+    includeSymbol: true,
+  });
 
-  const [password, setPassword] = useState(() => generatePassword());
+  function generatePassword(): void {
+    const LOWERCASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
+    const UPPERCASE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const NUMBER_CHAR = "0123456789";
+    const SYMBOL_CHAR = "!#$%&*/<=>?@[]_{}";
 
-  function generatePassword(
-    characterAmount = passLength,
-    includeUpper = includeUppercase,
-    includeNumbers = includeNumber,
-    includeSymbols = includeSymbol
-    ) {
-      const UPPERCASE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      const LOWERCASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
-      const NUMBER_CHAR = "1234567890";
-      const SYMBOL_CHAR = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    let combinedCharacters = LOWERCASE_CHAR;
 
-      let combinedCharacters = LOWERCASE_CHAR;
+    if (passwordContent.includeUppercase) combinedCharacters += UPPERCASE_CHAR;
+    if (passwordContent.includeNumber) combinedCharacters += NUMBER_CHAR;
+    if (passwordContent.includeSymbol) combinedCharacters += SYMBOL_CHAR;
 
-      if (includeUpper) combinedCharacters += UPPERCASE_CHAR;
-      if (includeNumbers) combinedCharacters += NUMBER_CHAR;
-      if (includeSymbols) combinedCharacters += SYMBOL_CHAR;
+    let passwordResult = "";
 
-      let password = "";
-      for (let i = 0; i < characterAmount; i++) {
-        password += combinedCharacters.charAt(
-          Math.floor(Math.random() * combinedCharacters.length)
-        );
-      }
-
-      return password;
+    for (let i = 0; i < passwordContent.length; i++) {
+      passwordResult += combinedCharacters.charAt(
+        Math.floor(Math.random() * combinedCharacters.length)
+      );
     }
+
+    setPassword(passwordResult);
+  }
+
+  useEffect(() => {
+    generatePassword();
+  }, []);
 
   function handleCopy(password: string) {
     copy(password);
@@ -76,74 +83,97 @@ export const Card = () => {
           style={{ backgroundColor: "#075985", color: "#FFFFFF" }} />
       </div>
 
-      <div className="text-base font-semibold sm:text-lg" >
-        <div className="flex items-center justify-between mb-3" >
-          <label
-            htmlFor="password-length"> LENGTH </label>
-          <input
-            type="range"
-            id="password-length"
-            className="h-2 w-1/4 appearance-none rounded"
-            min={4}
-            max={25}
-            value={passLength}
-            onChange={(e) => setPassLength(parseInt(e.target.value))}  />
+      <div className="text-sm sm:text-lg font-semibold">
+        <div className="flex items-center justify-between mb-3">
+          <label htmlFor="password-length"> LENGTH </label>
 
-          <input
-            type="number"
-            className="w-14 pl-2 rounded border text-cyan-800"
-            aria-labelledby="password-length"
-            min={4}
-            max={25}
-            value={passLength}
-            onChange={(e) =>
-              setPassLength(e.target.value === "" ? "" : parseInt(e.target.value))} />
+          <span className="flex justify-end items-center gap-5">
+            <input
+              type="range"
+              id="password-length"
+              className="h-2 w-1/5 sm:w-1/3 appearance-none rounded"
+              min={4}
+              max={25}
+              value={passwordContent.length}
+              onChange={(e) => {
+                setPasswordContent((prevState) => ({
+                  ...prevState,
+                  length: Number(e.target.value),
+                }));
+              }}
+            />
+
+            <input
+              type="number"
+              className="w-14 pl-2 rounded border text-cyan-800 text-base"
+              aria-labelledby="password-length"
+              min={4}
+              max={25}
+              value={passwordContent.length}
+              onChange={(e) => {
+                setPasswordContent((prevState) => ({
+                  ...prevState,
+                  length: Number(e.target.value),
+                }));
+              }}
+            />
+          </span>
         </div>
 
         <div className="flex items-center justify-between mb-3">
-          <label
-            htmlFor="include-uppercase"> UPPERCASE </label>
+          <label htmlFor="include-uppercase"> UPPERCASE </label>
           <input
             type="checkbox"
             id="include-uppercase"
             className="h-4 w-4"
-            defaultChecked={includeUppercase}
-            onChange={() =>
-              setIncludeUppercase((prevIncludeUppercase) => !prevIncludeUppercase)} />
+            defaultChecked={passwordContent.includeUppercase}
+            onChange={() => {
+              setPasswordContent((prevState) => ({
+                ...prevState,
+                includeUppercase: !prevState.includeUppercase,
+              }));
+            }}
+          />
         </div>
 
         <div className="flex items-center justify-between mb-3">
-          <label
-            htmlFor="include-number"> NUMBER </label>
+          <label htmlFor="include-number"> NUMBER </label>
           <input
             type="checkbox"
             id="include-number"
             className="h-4 w-4"
-            defaultChecked={includeNumber}
-            onChange={() =>
-              setIncludeNumber((prevIncludeNumber) => !prevIncludeNumber)} />
+            defaultChecked={passwordContent.includeNumber}
+            onChange={() => {
+              setPasswordContent((prevState) => ({
+                ...prevState,
+                includeNumber: !prevState.includeNumber,
+              }));
+            }}
+          />
         </div>
 
         <div className="flex items-center justify-between">
-          <label
-            htmlFor="include-symbol"> SYMBOL </label>
+          <label htmlFor="include-symbol"> SYMBOL </label>
           <input
             type="checkbox"
             id="include-symbol"
             className="h-4 w-4"
-            defaultChecked={includeSymbol}
-            onChange={() =>
-              setIncludeSymbol((prevIncludeSymbol) => !prevIncludeSymbol)} />
+            defaultChecked={passwordContent.includeSymbol}
+            onChange={() => {
+              setPasswordContent((prevState) => ({
+                ...prevState,
+                includeSymbol: !prevState.includeSymbol,
+              }));
+            }}
+          />
         </div>
       </div>
 
       <button
-        className="mt-6 w-full py-3 rounded text-base sm:text-lg font-bold
-        bg-gradient-to-r from-sky-200 to-sky-600
-        transition-all hover:scale-105 active:scale-100"
-        onClick={() =>
-          setPassword(
-            generatePassword(passLength, includeUppercase, includeNumber,includeSymbol))} >
+        className="mt-6 w-full py-3 rounded text-sm sm:text-lg font-bold
+        bg-gradient-to-r from-sky-500 via-sky-600 to-sky-800
+        transition-all duration-300 hover:scale-105"
+        onClick={() => generatePassword()} >
         GENERATE
       </button>
     </div>
